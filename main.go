@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+//Type equivalencies from C to Go
 var FTypes = map[string]string {
 	"int" : "int",
 	"void" : "",
@@ -26,6 +27,7 @@ var FTypes = map[string]string {
 	"const char" : "string",
 }
 
+// Strings in C that can be directly translated into another string in Go
 var OneToOne = map[string]string {
 	"SDL_TRUE" : "true",
 	"SDL_FALSE" : "false",
@@ -43,6 +45,7 @@ var OneToOne = map[string]string {
 	"if(" : "if (",
 }
 
+// For the state machine
 const (
 	None = iota
 	FnType
@@ -111,6 +114,7 @@ func SplitSpaceNoEmpty(s string) []string {
 	return out
 }
 
+// Turns "int *a" into "a *int"
 func SwapTypeAndName(s string) string {
 	p := SplitSpaceNoEmpty(s)
 	if len(p) == 0 {
@@ -139,6 +143,9 @@ func SwapTypeAndName(s string) string {
 	}
 }
 
+// turns "int myfunc(int a, int b) {"
+// into
+// "func myfunc(a int, b int) int {"
 func FixFuncParams(s string) string {
 	in := strings.Split(s, "(")
 	sec := strings.Split(in[1], ")")
@@ -154,6 +161,7 @@ func FixFuncParams(s string) string {
 	return out
 }
 
+// Matches C style variable declarations
 func MatchVarDecl(s string) bool {
 	/*
 	//TODO: handle assignments later
